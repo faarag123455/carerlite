@@ -1,0 +1,451 @@
+```twig
+{# templates/admin/company_new.html.twig #}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>New Company | EliteCareer</title>
+
+  {# Fonts & Icons #}
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #60a5fa;
+      --accent: #ec4899;
+      --light: #f1f5f9;
+      --darker: #0f172a;
+      --gray: #64748b;
+      --gray-light: #e2e8f0;
+      --gray-lighter: #f8fafc;
+      --success: #16a34a;
+      --error: #ef4444;
+      --warning: #f59e0b;
+      --radius: 0.75rem;
+      --radius-lg: 1rem;
+      --shadow: 0 8px 20px rgba(15,23,42,0.08);
+      --shadow-lg: 0 16px 40px rgba(15,23,42,0.12);
+      --transition: 180ms ease;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body.dash-body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 45%, #f8fafc 100%);
+      color: var(--darker);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 140px 20px 80px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 110px 16px 56px;
+      }
+    }
+
+    /* Header */
+    .admin-shell { }
+
+    .admin-inner { }
+
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 26px;
+      flex-wrap: wrap;
+    }
+
+    .admin-title {
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      font-size: 2rem;
+      line-height: 1.2;
+      font-weight: 800;
+      color: var(--darker);
+      margin: 0 0 6px;
+      letter-spacing: -0.02em;
+    }
+
+    .admin-sub {
+      margin: 0;
+      color: var(--gray);
+      font-size: 0.95rem;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #ffffff;
+      box-shadow: 0 10px 18px rgba(37,99,235,0.25);
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition), opacity var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(37,99,235,0.28);
+      opacity: 0.97;
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 6px 14px rgba(30,64,175,0.45);
+    }
+
+    .btn-secondary {
+      background: rgba(15,23,42,0.02);
+      color: var(--darker);
+      border-color: rgba(148,163,184,0.6);
+      box-shadow: 0 8px 18px rgba(15,23,42,0.06);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15,23,42,0.06);
+    }
+
+    .auth-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .auth-link:hover {
+      text-decoration: underline;
+    }
+
+    /* Alerts */
+    .alert {
+      border-radius: var(--radius);
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      border: 1px solid transparent;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .alert i {
+      margin-top: 2px;
+      font-size: 0.9rem;
+    }
+
+    .alert-success {
+      background: rgba(16,185,129,0.08);
+      border-color: rgba(16,185,129,0.4);
+      color: var(--success);
+    }
+
+    .alert-error {
+      background: rgba(239,68,68,0.06);
+      border-color: rgba(239,68,68,0.35);
+      color: var(--error);
+    }
+
+    /* Card */
+    .admin-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.35);
+      box-shadow: var(--shadow-lg);
+      padding: 24px 22px 22px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .admin-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(600px 280px at -10% 0%, rgba(59,130,246,0.12), transparent 55%),
+        radial-gradient(620px 300px at 110% 10%, rgba(236,72,153,0.16), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .admin-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .admin-card-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--darker);
+      margin: 0 0 4px;
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    }
+
+    .admin-card-sub {
+      font-size: 0.9rem;
+      color: var(--gray);
+      margin: 0 0 18px;
+    }
+
+    /* Form */
+    .admin-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .admin-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .admin-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .admin-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--darker);
+    }
+
+    .admin-hint {
+      font-size: 0.78rem;
+      color: rgba(100,116,139,0.9);
+    }
+
+    .admin-input {
+      width: 100%;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-light);
+      background: rgba(248,250,252,0.95);
+      padding: 10px 12px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+      color: var(--darker);
+    }
+
+    .admin-input:focus {
+      border-color: var(--primary-light);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.16);
+    }
+
+    .admin-input::placeholder {
+      color: rgba(148,163,184,0.9);
+    }
+
+    .admin-divider {
+      border: none;
+      border-top: 1px solid var(--gray-lighter);
+      margin: 6px 0 10px;
+    }
+
+    .admin-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .admin-note {
+      font-size: 0.8rem;
+      color: rgba(100,116,139,0.95);
+      max-width: 360px;
+    }
+
+    @media (max-width: 640px) {
+      .admin-footer {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .admin-footer > div {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      .btn,
+      .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body class="dash-body">
+
+<main class="admin-shell">
+  <div class="container admin-inner">
+
+    <header class="admin-header">
+      <div>
+        <h1 class="admin-title">
+          <i class="fa-solid fa-building" style="margin-right:8px;color:var(--primary)"></i>
+          New Company
+        </h1>
+        <p class="admin-sub">
+          Create a company and optionally assign its first HR member.
+        </p>
+      </div>
+      <div class="admin-actions">
+        <a href="{{ path('web_admin_companies') }}" class="btn btn-secondary">
+          <i class="fa-solid fa-list"></i>
+          Back to companies
+        </a>
+        <a href="{{ path('web_admin_index') }}" class="btn">
+          <i class="fa-solid fa-screwdriver-wrench"></i>
+          Admin home
+        </a>
+      </div>
+    </header>
+
+    {# Flash messages #}
+    {% for msg in app.flashes('success') %}
+      <div class="alert alert-success" style="margin-bottom:12px;">
+        <i class="fa-solid fa-circle-check"></i>
+        {{ msg }}
+      </div>
+    {% endfor %}
+
+    {% for msg in app.flashes('error') %}
+      <div class="alert alert-error" style="margin-bottom:12px;">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        {{ msg }}
+      </div>
+    {% endfor %}
+
+    <section class="admin-card">
+      <div class="admin-card-inner">
+        <h2 class="admin-card-title">Company details</h2>
+        <p class="admin-card-sub">
+          The name is required. Website, industry and the initial HR member are optional and can be updated later.
+        </p>
+
+        <form method="post" action="{{ path('web_admin_companies_new') }}" class="admin-form">
+          <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+
+          <div class="admin-field">
+            <div class="admin-label-row">
+              <label for="name" class="admin-label">Company name</label>
+              <span class="admin-hint">Required</span>
+            </div>
+            <input
+              id="name"
+              name="name"
+              type="text"
+              class="admin-input"
+              placeholder="e.g. Elite Tech Solutions"
+              required
+            >
+          </div>
+
+          <div class="admin-field">
+            <div class="admin-label-row">
+              <label for="website" class="admin-label">Website</label>
+              <span class="admin-hint">Optional</span>
+            </div>
+            <input
+              id="website"
+              name="website"
+              type="url"
+              class="admin-input"
+              placeholder="https://example.com"
+            >
+          </div>
+
+          <div class="admin-field">
+            <div class="admin-label-row">
+              <label for="industry" class="admin-label">Industry</label>
+              <span class="admin-hint">Optional</span>
+            </div>
+            <input
+              id="industry"
+              name="industry"
+              type="text"
+              class="admin-input"
+              placeholder="Technology, Finance, Healthcare..."
+            >
+          </div>
+
+          <hr class="admin-divider">
+
+          <div class="admin-field">
+            <div class="admin-label-row">
+              <label for="hr_email" class="admin-label">First HR member (email)</label>
+              <span class="admin-hint">Optional – must be an existing user</span>
+            </div>
+            <input
+              id="hr_email"
+              name="hr_email"
+              type="email"
+              class="admin-input"
+              placeholder="hr@company.com"
+            >
+          </div>
+
+          <div class="admin-footer">
+            <p class="admin-note">
+              The HR user (if provided) will automatically receive the global
+              <strong>ROLE_HR</strong> and be linked to this company as a <strong>CompanyMember</strong>.
+            </p>
+            <div>
+              <a href="{{ path('web_admin_companies') }}" class="btn btn-secondary">
+                <i class="fa-solid fa-arrow-left"></i>
+                Cancel
+              </a>
+              <button type="submit" class="btn">
+                <i class="fa-solid fa-floppy-disk"></i>
+                Create company
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+</body>
+</html>
+```

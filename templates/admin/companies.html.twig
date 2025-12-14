@@ -1,0 +1,418 @@
+```twig
+{# templates/admin/companies.html.twig #}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Companies | EliteCareer</title>
+
+  {# Fonts & Icons #}
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-soft: rgba(37, 99, 235, 0.08);
+      --primary-light: #60a5fa;
+      --accent: #ec4899;
+      --light: #f1f5f9;
+      --darker: #0f172a;
+      --gray: #64748b;
+      --gray-light: #e2e8f0;
+      --gray-lighter: #f8fafc;
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 0.75rem;
+      --radius-lg: 1rem;
+      --shadow: 0 8px 20px rgba(15,23,42,0.08);
+      --shadow-lg: 0 16px 40px rgba(15,23,42,0.12);
+      --transition: 180ms ease;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body.dash-body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 40%, #f8fafc 100%);
+      color: var(--darker);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 140px 20px 72px;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 110px 16px 48px;
+      }
+    }
+
+    /* Header / toolbar */
+    .dash-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .dash-title {
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      font-size: 2rem;
+      line-height: 1.2;
+      font-weight: 800;
+      margin: 0 0 6px;
+      color: var(--darker);
+      letter-spacing: -0.02em;
+    }
+
+    .dash-sub {
+      margin: 0;
+      font-size: 0.95rem;
+      color: var(--gray);
+    }
+
+    .dash-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+      justify-content: flex-end;
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 16px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #ffffff;
+      box-shadow: 0 10px 18px rgba(37,99,235,0.25);
+      transition: transform var(--transition), box-shadow var(--transition), background var(--transition), opacity var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(37,99,235,0.28);
+      opacity: 0.98;
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 6px 14px rgba(30,64,175,0.45);
+    }
+
+    .btn-secondary {
+      background: rgba(15,23,42,0.02);
+      color: var(--darker);
+      border-color: rgba(148,163,184,0.6);
+      box-shadow: 0 8px 18px rgba(15,23,42,0.06);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15,23,42,0.04);
+    }
+
+    .auth-link {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .auth-link:hover {
+      text-decoration: underline;
+    }
+
+    .muted {
+      color: var(--gray);
+    }
+
+    /* Card */
+    .dash-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.35);
+      box-shadow: var(--shadow-lg);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .dash-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(650px 300px at -10% 0%, rgba(59,130,246,0.10), transparent 55%),
+        radial-gradient(680px 320px at 110% 0%, rgba(236,72,153,0.10), transparent 60%);
+      opacity: 0.9;
+      pointer-events: none;
+    }
+
+    .dash-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .dash-card-head {
+      padding: 16px 20px;
+      border-bottom: 1px solid rgba(148,163,184,0.35);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: linear-gradient(180deg, rgba(248,250,252,0.92), rgba(248,250,252,0.8));
+    }
+
+    .dash-card-title {
+      margin: 0;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--darker);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+    }
+
+    .dash-card-body {
+      padding: 16px 20px 20px;
+      background: #ffffff;
+    }
+
+    /* Table */
+    table.jobs-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    .jobs-table thead {
+      background: rgba(248,250,252,0.95);
+    }
+
+    .jobs-table th,
+    .jobs-table td {
+      padding: 10px 12px;
+      text-align: left;
+      border-bottom: 1px solid rgba(241,245,249,0.9);
+      vertical-align: top;
+    }
+
+    .jobs-table th {
+      font-size: 0.78rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(100,116,139,0.95);
+    }
+
+    .jobs-table tbody tr:nth-child(even) td {
+      background: rgba(248,250,252,0.6);
+    }
+
+    .jobs-table tbody tr:hover td {
+      background: rgba(239,246,255,0.8);
+    }
+
+    .company-name {
+      font-weight: 600;
+      color: var(--darker);
+    }
+
+    .company-meta {
+      font-size: 0.78rem;
+      color: rgba(100,116,139,0.95);
+      margin-top: 2px;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      border: 1px solid rgba(148,163,184,0.7);
+      background: rgba(248,250,252,0.9);
+      color: var(--gray);
+      white-space: nowrap;
+    }
+
+    .chip i {
+      font-size: 0.75rem;
+    }
+
+    .empty-state {
+      font-size: 0.95rem;
+      color: var(--gray);
+      padding: 6px 0;
+    }
+
+    .empty-state strong {
+      color: var(--darker);
+    }
+
+    @media (max-width: 640px) {
+      .jobs-table thead {
+        display: none;
+      }
+
+      .jobs-table tr {
+        display: block;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(241,245,249,0.9);
+      }
+
+      .jobs-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: baseline;
+        border: none;
+        padding: 6px 4px;
+        font-size: 0.85rem;
+      }
+
+      .jobs-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: rgba(100,116,139,0.95);
+        margin-right: 10px;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        font-size: 0.75rem;
+      }
+    }
+  </style>
+</head>
+<body class="dash-body">
+<main class="container">
+
+  {# CSRF token (if you need it for JS actions) #}
+  <input type="hidden" id="csrf_admin_companies" value="{{ csrf_token }}">
+
+  <div class="dash-header">
+    <div>
+      <h1 class="dash-title">
+        <i class="fa-solid fa-building" style="margin-right:8px;color:var(--primary)"></i>
+        Companies
+      </h1>
+      <p class="dash-sub">
+        Review organizations on EliteCareer and see how many members they have.
+      </p>
+    </div>
+
+    <div class="dash-actions">
+      <a href="{{ path('web_admin_companies_new') }}" class="btn">
+        <i class="fa-solid fa-plus"></i>
+        New company
+      </a>
+      <a href="{{ path('web_admin_index') }}" class="btn btn-secondary">
+        <i class="fa-solid fa-screwdriver-wrench"></i>
+        Admin home
+      </a>
+    </div>
+  </div>
+
+  <div class="dash-card">
+    <div class="dash-card-inner">
+      <div class="dash-card-head">
+        <h2 class="dash-card-title">
+          <i class="fa-solid fa-list"></i>
+          Company list
+        </h2>
+        <span class="muted" style="font-size:0.82rem">
+          {{ companies|length }} compan{{ companies|length == 1 ? 'y' : 'ies' }}
+        </span>
+      </div>
+
+      <div class="dash-card-body">
+        {% if companies is not empty %}
+          <table class="jobs-table">
+            <thead>
+            <tr>
+              <th>Name</th>
+              <th>Website</th>
+              <th>Industry</th>
+              <th>Members</th>
+              <th>Created</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for c in companies %}
+              <tr>
+                <td data-label="Name">
+                  <div class="company-name">{{ c.name }}</div>
+                  {% if c.industry %}
+                    <div class="company-meta">
+                      <i class="fa-solid fa-briefcase" style="margin-right:4px;"></i>
+                      {{ c.industry }}
+                    </div>
+                  {% endif %}
+                </td>
+                <td data-label="Website">
+                  {% if c.website %}
+                    <a href="{{ c.website }}" target="_blank" rel="noopener noreferrer" class="auth-link">
+                      {{ c.website }}
+                    </a>
+                  {% else %}
+                    —
+                  {% endif %}
+                </td>
+                <td data-label="Industry">
+                  {{ c.industry ?? '—' }}
+                </td>
+                <td data-label="Members">
+                  <span class="chip">
+                    <i class="fa-solid fa-users"></i>
+                    {{ c.members|length }} member{{ c.members|length == 1 ? '' : 's' }}
+                  </span>
+                </td>
+                <td data-label="Created">
+                  {{ c.createdAt|date('Y-m-d') }}
+                </td>
+              </tr>
+            {% endfor %}
+            </tbody>
+          </table>
+        {% else %}
+          <p class="empty-state">
+            <strong>No companies registered yet.</strong>
+            <br>
+            Get started by
+            <a href="{{ path('web_admin_companies_new') }}" class="auth-link">
+              creating your first company
+            </a>.
+          </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</main>
+</body>
+</html>
+```

@@ -1,0 +1,705 @@
+```twig
+{# templates/jobs/new.html.twig #}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Post a Job | EliteCareer</title>
+
+  {# Google Fonts + Font Awesome #}
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.0/css/all.min.css">
+
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #60a5fa;
+      --accent: #ec4899;
+      --light: #f1f5f9;
+      --darker: #0f172a;
+      --dark: #020617;
+      --gray: #64748b;
+      --gray-light: #e2e8f0;
+      --gray-lighter: #f8fafc;
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --error: #ef4444;
+      --radius: 0.75rem;
+      --radius-lg: 1rem;
+      --shadow: 0 8px 20px rgba(15,23,42,0.08);
+      --shadow-lg: 0 18px 45px rgba(15,23,42,0.18);
+      --transition: 180ms ease;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #e0f2fe 0, #f9fafb 40%, #f8fafc 100%);
+      color: var(--darker);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    .job-page-shell {
+      padding: 140px 0 80px; /* space for fixed header */
+    }
+
+    .job-page-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 32px;
+      align-items: flex-start;
+    }
+
+    @media (max-width: 992px) {
+      .job-page-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .job-page-header {
+      margin-bottom: 24px;
+    }
+
+    .job-page-title {
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      font-size: 2.25rem;
+      font-weight: 800;
+      color: var(--darker);
+      margin-bottom: 6px;
+      letter-spacing: -0.03em;
+    }
+
+    .job-page-subtitle {
+      color: var(--gray);
+      font-size: 0.98rem;
+      margin: 0;
+    }
+
+    .job-page-meta {
+      margin-top: 12px;
+      font-size: 0.85rem;
+      color: rgba(100,116,139,0.95);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .job-page-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--gray-lighter);
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--dark);
+      border: 1px solid rgba(148,163,184,0.5);
+    }
+
+    .job-page-pill i {
+      font-size: 0.85rem;
+      color: var(--primary);
+    }
+
+    /* Alerts */
+    .job-alert {
+      margin-bottom: 16px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      font-size: 0.9rem;
+      border: 1px solid;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: #fff;
+    }
+
+    .job-alert i {
+      margin-top: 2px;
+    }
+
+    .job-alert--error {
+      background: rgba(239,68,68,0.06);
+      border-color: rgba(239,68,68,0.25);
+      color: var(--error);
+    }
+
+    .job-alert--success {
+      background: rgba(16,185,129,0.08);
+      border-color: rgba(16,185,129,0.28);
+      color: var(--success);
+    }
+
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      cursor: pointer;
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #ffffff;
+      box-shadow: 0 10px 24px rgba(37,99,235,0.3);
+      transition: transform var(--transition), box-shadow var(--transition), opacity var(--transition), background var(--transition);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 16px 32px rgba(37,99,235,0.35);
+      opacity: 0.97;
+    }
+
+    .btn:active {
+      transform: translateY(0);
+      box-shadow: 0 8px 18px rgba(30,64,175,0.5);
+    }
+
+    .btn-secondary {
+      background: rgba(15,23,42,0.02);
+      color: var(--darker);
+      border-color: rgba(148,163,184,0.7);
+      box-shadow: 0 10px 20px rgba(15,23,42,0.06);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(15,23,42,0.06);
+      box-shadow: 0 12px 26px rgba(15,23,42,0.10);
+    }
+
+    .btn-icon-only {
+      padding-inline: 12px;
+    }
+
+    /* Card (form) */
+    .job-card {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(148,163,184,0.45);
+      box-shadow: var(--shadow-lg);
+      padding: 26px 26px 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .job-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(700px 320px at -10% 0%, rgba(59,130,246,0.12), transparent 55%),
+        radial-gradient(650px 300px at 110% 10%, rgba(139,92,246,0.15), transparent 60%);
+      pointer-events: none;
+      opacity: 1;
+    }
+
+    .job-card-inner {
+      position: relative;
+      z-index: 1;
+    }
+
+    .job-form {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .job-form-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+      gap: 18px 24px;
+    }
+
+    @media (max-width: 768px) {
+      .job-page-shell {
+        padding: 120px 0 60px;
+      }
+      .job-form-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .job-form-col {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .job-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .job-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .job-label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: var(--darker);
+    }
+
+    .job-label-hint {
+      font-size: 0.78rem;
+      color: rgba(100,116,139,0.9);
+    }
+
+    .job-input,
+    .job-select,
+    .job-textarea {
+      width: 100%;
+      border-radius: var(--radius);
+      border: 1px solid var(--gray-light);
+      background: rgba(248,250,252,0.96);
+      padding: 11px 12px;
+      font-size: 0.95rem;
+      outline: none;
+      transition: var(--transition);
+      color: var(--darker);
+    }
+
+    .job-input:focus,
+    .job-select:focus,
+    .job-textarea:focus {
+      border-color: var(--primary-light);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px rgba(59,130,246,0.16);
+    }
+
+    .job-textarea {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    .job-salary-row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .job-footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .job-footer-note {
+      font-size: 0.8rem;
+      color: rgba(100,116,139,0.9);
+    }
+
+    .job-submit {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+    }
+
+    .job-submit .btn {
+      padding-inline: 26px;
+    }
+
+    /* Side card */
+    .job-side-card {
+      background: #020617;
+      border-radius: var(--radius-lg);
+      padding: 26px 24px;
+      color: #e5e7eb;
+      position: relative;
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(15,23,42,0.85);
+    }
+
+    .job-side-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(550px 260px at 10% 0%, rgba(59,130,246,0.55), transparent 55%),
+        radial-gradient(520px 260px at 90% 40%, rgba(236,72,153,0.30), transparent 60%);
+      opacity: 0.95;
+      mix-blend-mode: screen;
+    }
+
+    .job-side-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .job-side-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(148,163,184,0.5);
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .job-side-pill i {
+      color: #22c55e;
+    }
+
+    .job-side-title {
+      font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    .job-side-text {
+      font-size: 0.9rem;
+      opacity: 0.92;
+    }
+
+    .job-side-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+      font-size: 0.86rem;
+      padding-left: 0;
+      list-style: none;
+    }
+
+    .job-side-list li {
+      display: flex;
+      gap: 8px;
+      align-items: flex-start;
+    }
+
+    .job-side-list li i {
+      margin-top: 2px;
+      font-size: 0.8rem;
+    }
+
+    .job-side-meta {
+      margin-top: 8px;
+      font-size: 0.8rem;
+      opacity: 0.9;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .job-side-meta span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .job-side-meta i {
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 768px) {
+      .job-side-card {
+        order: -1;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="job-page-shell">
+    <div class="container">
+      <div class="job-page-inner">
+
+        {# LEFT: JOB FORM #}
+        <section aria-labelledby="job-form-heading">
+
+          <header class="job-page-header">
+            <h1 id="job-form-heading" class="job-page-title">
+              Post a new job
+            </h1>
+            <p class="job-page-subtitle">
+              Describe your open role and we’ll help you reach high-quality candidates that match your needs.
+            </p>
+
+            {% if user %}
+              <div class="job-page-meta">
+                <span>Logged in as <strong>{{ user.email }}</strong></span>
+                <span class="job-page-pill">
+                  <i class="fas fa-user-shield"></i>
+                  {{ user.roles|join(', ') }}
+                </span>
+              </div>
+            {% endif %}
+          </header>
+
+          {# Flash messages #}
+          {% for msg in app.flashes('success') %}
+            <div class="job-alert job-alert--success">
+              <i class="fas fa-circle-check"></i>
+              <span>{{ msg }}</span>
+            </div>
+          {% endfor %}
+
+          {% for msg in app.flashes('error') %}
+            <div class="job-alert job-alert--error">
+              <i class="fas fa-circle-exclamation"></i>
+              <span>{{ msg }}</span>
+            </div>
+          {% endfor %}
+
+          <div class="job-card">
+            <div class="job-card-inner">
+              <form method="post" action="{{ path('web_job_new') }}" class="job-form">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+
+                <div class="job-form-grid">
+
+                  <div class="job-form-col">
+                    <div class="job-field">
+                      <div class="job-label-row">
+                        <label class="job-label" for="title">Job title</label>
+                        <span class="job-label-hint">Required</span>
+                      </div>
+                      <input
+                        id="title"
+                        name="title"
+                        type="text"
+                        class="job-input"
+                        placeholder="e.g. Senior Frontend Engineer"
+                        required
+                      >
+                    </div>
+
+                    <div class="job-field">
+                      <div class="job-label-row">
+                        <label class="job-label" for="location">Location</label>
+                      </div>
+                      <input
+                        id="location"
+                        name="location"
+                        type="text"
+                        class="job-input"
+                        placeholder="City, Country or Remote"
+                        required
+                      >
+                    </div>
+
+                    <div class="job-field">
+                      <div class="job-label-row">
+                        <label class="job-label" for="employment_type">Employment type</label>
+                      </div>
+                      <select
+                        id="employment_type"
+                        name="employment_type"
+                        class="job-select"
+                        required
+                      >
+                        <option value="FULL_TIME">Full-time</option>
+                        <option value="PART_TIME">Part-time</option>
+                        <option value="CONTRACT">Contract</option>
+                        <option value="INTERNSHIP">Internship</option>
+                      </select>
+                    </div>
+
+                    <div class="job-field">
+                      <div class="job-label-row">
+                        <label class="job-label" for="work_mode">Work mode</label>
+                      </div>
+                      <select
+                        id="work_mode"
+                        name="work_mode"
+                        class="job-select"
+                        required
+                      >
+                        <option value="ONSITE">On-site</option>
+                        <option value="REMOTE">Remote</option>
+                        <option value="HYBRID">Hybrid</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="job-form-col">
+                    <div class="job-field">
+                      <div class="job-label-row">
+                        <label class="job-label" for="category">Category</label>
+                        <span class="job-label-hint">Helps candidates discover your role</span>
+                      </div>
+                      <select
+                        id="category"
+                        name="category"
+                        class="job-select"
+                        required
+                      >
+                        <option value="TECHNOLOGY">Technology</option>
+                        <option value="FINANCE">Finance</option>
+                        <option value="HEALTHCARE">Healthcare</option>
+                        <option value="EDUCATION">Education</option>
+                        <option value="MARKETING">Marketing</option>
+                        <option value="OTHER">Other</option>
+                      </select>
+                    </div>
+
+                    <div class="job-field">
+                      <div class="job-label-row">
+                        <label class="job-label">Salary range (optional)</label>
+                        <span class="job-label-hint">Shown as a band on the job card</span>
+                      </div>
+                      <div class="job-salary-row">
+                        <input
+                          name="salary_min"
+                          type="number"
+                          step="100"
+                          min="0"
+                          class="job-input"
+                          placeholder="Min, e.g. 60000"
+                        >
+                        <input
+                          name="salary_max"
+                          type="number"
+                          step="100"
+                          min="0"
+                          class="job-input"
+                          placeholder="Max, e.g. 80000"
+                        >
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+
+                <div class="job-field">
+                  <div class="job-label-row">
+                    <label class="job-label" for="description">Job description</label>
+                    <span class="job-label-hint">Required – mission, responsibilities, stack…</span>
+                  </div>
+                  <textarea
+                    id="description"
+                    name="description"
+                    class="job-textarea"
+                    placeholder="Describe the mission, responsibilities, team context and what makes this role unique."
+                    required
+                  ></textarea>
+                </div>
+
+                <div class="job-field">
+                  <div class="job-label-row">
+                    <label class="job-label" for="requirements">Requirements</label>
+                    <span class="job-label-hint">Optional – skills, experience, languages…</span>
+                  </div>
+                  <textarea
+                    id="requirements"
+                    name="requirements"
+                    class="job-textarea"
+                    placeholder="List the main skills, experience level, and any must-have qualifications."
+                  ></textarea>
+                </div>
+
+                <div class="job-footer-row">
+                  <p class="job-footer-note">
+                    By posting this job, you confirm that the information is accurate and complies with EliteCareer’s terms and guidelines.
+                  </p>
+                  <div class="job-submit">
+                    <a href="/dashboard" class="btn btn-secondary">
+                      <i class="fas fa-arrow-left"></i>
+                      Back to dashboard
+                    </a>
+                    <button type="submit" class="btn">
+                      <i class="fas fa-paper-plane"></i>
+                      Publish job
+                    </button>
+                  </div>
+                </div>
+
+              </form>
+            </div>
+          </div>
+        </section>
+
+        {# RIGHT: SIDE INFO / TIPS #}
+        <aside class="job-side-card" aria-label="Tips for better job posting">
+          <div class="job-side-inner">
+            <span class="job-side-pill">
+              <i class="fas fa-bolt"></i>
+              Hiring insights
+            </span>
+
+            <h2 class="job-side-title">
+              Write a job that attracts
+              the right candidates.
+            </h2>
+
+            <p class="job-side-text">
+              Clear titles, transparent salary ranges and a concise list of responsibilities
+              dramatically increase application quality and reduce time-to-hire.
+            </p>
+
+            <ul class="job-side-list">
+              <li>
+                <i class="fas fa-circle-dot"></i>
+                <span><strong>Keep it focused:</strong> highlight the 4–6 most important responsibilities.</span>
+              </li>
+              <li>
+                <i class="fas fa-circle-dot"></i>
+                <span><strong>Be specific:</strong> mention tech stack, seniority level and reporting line.</span>
+              </li>
+              <li>
+                <i class="fas fa-circle-dot"></i>
+                <span><strong>Show impact:</strong> explain how this role contributes to company goals.</span>
+              </li>
+            </ul>
+
+            <div class="job-side-meta">
+              <span>
+                <i class="fas fa-clock"></i>
+                ~10 minutes to complete
+              </span>
+              <span>
+                <i class="fas fa-users"></i>
+                Reach thousands of candidates
+              </span>
+            </div>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  </main>
+
+</body>
+</html>
+```
